@@ -7,79 +7,48 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
-    {
-        return response()->json(Category::all()->toArray());
-    }
+        {
+            return response()->json(Category::all()->toArray());
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        public function store(Request $request)
+        {
+            $category = Category::create($request->only('name'));
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        return response()->json(['status' => true, 'message' => 'Categorie Crée']);
-    }
+            return response()->json([
+                'status' => (bool) $category,
+                'message'=> $category ? 'Category Crée' : 'Erreur durant la création de la catégorie'
+            ]);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
-    }
+        public function show(Category $category)
+        {
+            return response()->json($category);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
-    }
+        public function tasks(Category $category)
+        {
+            return response()->json($category->tasks()->orderBy('order')->get());
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Category $category)
-    {
-        //
-    }
+        public function update(Request $request, Category $category)
+        {
+            $status = $category->update($request->only('name'));
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Category $category)
-    {
-        return response()->json(['status' => true, 'message' => 'Categorie Effacée']);
-    }
+            return response()->json([
+                'status' => $status,
+                'message' => $status ? 'Categorie Mise à jour!' : 'Erreur durant la mise à jour de la catégorie'      
+            ]);
+        }
+
+        public function destroy(Category $category)
+        {
+            $status  = $category->delete();
+
+            return response()->json([
+                'status' => $status,
+                'message' => $status ? 'Categorie Effacée' : 'Erreur durant la suppression de la categorie'
+            ]);
+        }
 }
