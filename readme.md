@@ -7,6 +7,6 @@ App basée sur ce tuto : <a href="https://blog.pusher.com/web-application-larave
 TODO :
 <ul>
     <li>
-        Corriger un bug de drag&drop lorsque l'on passe une tache dans une nouvelle catégorie
+        Reste un bug sur le drag&drop dans le sens inverse (de 'terminé' à 'en cours' par exemple), ceci doit venir de l'id de l'élément.
     </li>
 </ul>
