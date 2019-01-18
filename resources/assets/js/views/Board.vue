@@ -4,6 +4,7 @@
             <draggable element="div" class="col-md-12" v-model="categories" :options="dragOptions">
                 <transition-group class="row">
                     <div class="col-md-4" v-for="element,index in categories" :key="element.id">
+                        <p>{{element.id}}</p>
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">{{element.name}}</h4>
@@ -11,7 +12,7 @@
                             <div class="card-body card-body-dark">
                                 <draggable :options="dragOptions" element="div" @end="changeOrder" v-model="element.tasks">
                                     <transition-group :id="element.id">
-                                        <div v-for="task,index in element.tasks" :key="task.category_id+','+task.order" class="transit-1" :id="task.id">
+                                        <div v-for="task,index in element.tasks" :key="task.category_id+task.order" class="transit-1" :id="task.id">
                                             <div class="small-card">
                                                 <textarea v-if="task === editingTask" class="text-input" @keyup.enter="endEditing(task)" @blur="endEditing(task)" v-model="task.name"></textarea>
                                                 <label for="checkbox" v-if="task !== editingTask" @dblclick="editTask(task)">{{ task.name }}</label>
@@ -88,12 +89,20 @@
                 })
             },
             changeOrder(data) {
+                
+                console.log('data : ');
+                console.log(data);
                 let toTask = data.to
+                console.log('toTask : ')
+                console.log(toTask)
                 let fromTask = data.from
+                console.log('fromTask : ')
+                console.log(fromTask)
+
                 let task_id = data.item.id
                 let category_id = fromTask.id == toTask.id ? null : toTask.id
                 let order = data.newIndex == data.oldIndex ? false : data.newIndex
-
+//                console.log(toTask, fromTask, task_id, category_id, order);
                 if (order !== false) {
                     axios.patch(`api/task/${task_id}`, {order, category_id}).then(response => {
                         console.log('ordre MàJ')
@@ -125,6 +134,7 @@
                         tasks : []
                     })
                 })
+                console.log(this.categories)
                 this.loadTasks()
             })
         },
@@ -132,7 +142,7 @@
         computed: {
             dragOptions () {
               return  {
-                animation: 0.5,
+                animation: 50,
                 group: 'description',
                 ghostClass: 'ghost'
               };
@@ -145,5 +155,5 @@
 
             next()
         }
-}
+    }
 </script>
